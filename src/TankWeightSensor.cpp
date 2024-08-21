@@ -11,13 +11,25 @@ void TankWeightSensor::setup() {
 }
 
 float TankWeightSensor::getUnits(int times) {
-  float value = scale.get_units(times);
-  if (value < 0)
-    value = 0;
-    
-  return value;
+  float units = scale.get_units(times);
+  if(TANK_INVERT)
+    units = -units;
+
+  if (units < 0) {
+    units = 0;
+  }
+  
+  return units;
 }
 
 float TankWeightSensor::getValue(int times) {
-  return scale.get_value(times);
+  float value = scale.get_value(times);
+  if(TANK_INVERT)
+    value = -value;
+
+  if (value < 0) {
+    value = 0;
+  }
+  
+  return value;
 }

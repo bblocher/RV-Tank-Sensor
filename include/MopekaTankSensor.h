@@ -4,7 +4,7 @@
 #include <ArduinoBLE.h>
 
 #define SERVICE_UUID "FEE5"
-#define ADVERTISING_INTERVAL 2500
+#define TRANSMIT_INTERVAL 1000
 
 #ifndef _NAME
     #define _NAME "Unknown"
@@ -34,7 +34,7 @@ public:
 
 private:
     AdvertisingData advertisingData;
-    long lastAdvertisement;
+    long lastTransmission;
     bool dataChanged;
 };
 

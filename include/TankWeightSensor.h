@@ -8,7 +8,11 @@
 #endif
 
 #ifndef TANK_SCALE
-  #define TANK_SCALE 2280.0f
+  #define TANK_SCALE 3000.0f
+#endif
+
+#ifndef TANK_INVERT
+  #define TANK_INVERT false
 #endif
 
 class TankWeightSensor {

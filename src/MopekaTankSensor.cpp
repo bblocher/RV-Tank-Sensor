@@ -1,6 +1,6 @@
 #include "MopekaTankSensor.h"
 
-MopekaTankSensor::MopekaTankSensor() : lastAdvertisement(0) {
+MopekaTankSensor::MopekaTankSensor() : lastTransmission(0) {
     advertisingData = {
         .Preamble = 0xFF0D,
         .ManufacturerData = {0x59, 0x00, 0x0C},
@@ -63,38 +63,24 @@ uint16_t MopekaTankSensor::getSensorValue() {
 }
 
 
-uint16_t smoothInput(int x) {
-  // Define constants
-  const float A = 360.0;  // Final amplitude
-  const float B = log(361.0);  // Normalization factor (ln(361))
-  
-  // Calculate the non-linear slowdown value
-  float y = A * (log(x + 1) / B);
-  
-  return y;
-}
-
 void MopekaTankSensor::setSensorValue(uint16_t value) {
-    //value = smoothInput(value);
-    //Serial.println(value);
     advertisingData.Sensor = (advertisingData.Sensor & 0xC000) + (value & 0x3FFF);
     dataChanged = true;
 }
 
 void MopekaTankSensor::loop() {
-    if (millis() - lastAdvertisement < ADVERTISING_INTERVAL) {
+    if (!dataChanged && millis() - lastTransmission < TRANSMIT_INTERVAL) {
         return;
     }
 
-    lastAdvertisement = millis();
+    lastTransmission = millis();
+    
     if (dataChanged) {
         dataChanged = false;
         BLE.advertise();
-        Serial.println("Advertising...");
     }
     else {
         BLE.poll();
-        Serial.println("Polling...");
     }
 
     delay(1);

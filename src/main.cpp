@@ -4,7 +4,7 @@
 // HX711 circuit wiring
 #define LOADCELL_DOUT_PIN 19
 #define LOADCELL_SCK_PIN 18
-#define MONITOR_INTERVAL 1000;
+#define MONITOR_INTERVAL 1000
 
 MopekaTankSensor tankSensor;
 TankWeightSensor weightSensor(LOADCELL_DOUT_PIN, LOADCELL_SCK_PIN);
@@ -19,14 +19,15 @@ long lastTankReading = 0;
 
 void loop() {
   // Monitor the tank
-  if (millis() - lastTankReading > 10000) {
+  if (millis() - lastTankReading > MONITOR_INTERVAL) {
     lastTankReading = millis();
 
-    float unit = weightSensor.getUnits();
-    Serial.println(unit);
+    Serial.println(weightSensor.getValue());
     
     // Update tank sensor data
-    tankSensor.setSensorValue(weightSensor.getUnits());
+    float unit = weightSensor.getUnits();
+    Serial.println(unit);
+    tankSensor.setSensorValue(unit);
   }
   
   // Run the tank sensor loop
